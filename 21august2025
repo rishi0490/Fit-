@@ -1,0 +1,2 @@
+setup dev eks cluster with devtron ai
+migration 14application types are application go lang, react , next js , php from standalone to k8s migration writing dockerfile, ecr used and deploy enable stdout log if on file logs written in nginx enable and supervisord.conf also used installation kube stacks Prometheus, alert manager, grafana, node exporter, logging also we will implement elk stacks
