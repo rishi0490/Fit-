@@ -1,0 +1,89 @@
+Resume – Senior DevOps Engineer
+
+Name: Rishi [Your Last Name]
+Email: [your email] | Phone: [your number] | Location: [City, India] | LinkedIn/GitHub: [your links]
+
+Professional Summary
+
+Results-driven Senior DevOps Engineer with expertise in Kubernetes (EKS), Devtron, CI/CD automation, observability, and cloud cost optimization. Proven track record of migrating 14+ large-scale applications (GoLang, React, Next.js, PHP) from standalone environments to Kubernetes, streamlining deployments, and implementing robust monitoring/logging solutions. Skilled in AWS services, containerization, infrastructure as code, and end-to-end automation for highly available, cost-efficient platforms.
+
+Key Achievements
+
+EKS Migration & Devtron Setup:
+
+Architected and deployed multi-environment (Dev & Prod) EKS clusters using Devtron for centralized application lifecycle management.
+
+Migrated 14 heterogeneous applications (GoLang APIs, React/Next.js frontends, PHP monoliths) into containerized workloads.
+
+Application Containerization & CI/CD:
+
+Designed Dockerfiles and pipelines for all applications.
+
+Leveraged AWS ECR for image storage and integrated Devtron auto-build & deploy strategy for seamless rollouts.
+
+Standardized logging by redirecting application logs to stdout; configured nginx + supervisord for legacy apps.
+
+Monitoring & Observability:
+
+Installed and configured Prometheus, Alertmanager, Grafana, and Node Exporter for metrics and alerting.
+
+Deployed full ELK stack (Elasticsearch, Logstash, Kibana) for centralized logging and log analytics.
+
+Networking & Cost Optimization:
+
+Implemented Route53 subdomain management with AWS Load Balancer target groups to reduce costs while supporting 14 applications.
+
+Optimized CloudFront/ALB usage and improved infrastructure cost efficiency.
+
+GitHub Migration:
+
+Migrated 25+ repositories from AWS CodeCommit to GitHub with complete history, tags, and branches using git clone --mirror.
+
+Standardized branching strategies and integrated with CI/CD pipelines.
+
+Technical Skills
+
+Cloud & Orchestration: AWS (EKS, EC2, S3, Route53, ALB, ECR, IAM, CloudFront), Kubernetes, Devtron
+
+CI/CD & SCM: GitHub Actions, Devtron pipelines, GitHub (migrated from CodeCommit)
+
+Containerization: Docker, Helm, Supervisord
+
+Monitoring & Logging: Prometheus, Alertmanager, Grafana, Node Exporter, ELK (ElasticSearch, Logstash, Kibana)
+
+Infrastructure Automation: Terraform, Ansible (with AWS SSM integration), Shell scripting
+
+Languages & Frameworks: GoLang, React, Next.js, PHP
+
+Other Tools: Nginx, Linux system administration
+
+Professional Experience
+Senior DevOps Engineer
+
+Fitpass, India | [Month Year] – Present
+
+Spearheaded EKS cluster setup (Dev & Prod) and application migration with Devtron.
+
+Migrated 14 applications into Kubernetes with Dockerized builds and automated deployments.
+
+Implemented subdomain routing via Route53 and ALB group strategy to optimize costs.
+
+Automated application observability using Prometheus, Grafana, ELK stack, and standardized log collection.
+
+Migrated 25 Git repos from CodeCommit to GitHub preserving complete commit history.
+
+Enabled stdout logging, nginx + supervisord configs, and eliminated file-based logs for better observability in Kubernetes.
+
+Education
+
+B.Tech / M.Tech [Your Branch] – [Your University], [Year]
+
+Certifications
+
+AWS Certified Solutions Architect – Associate (if applicable)
+
+Certified Kubernetes Administrator (CKA) (if applicable)
+
+GitHub Advanced Security / DevOps certifications (if applicable)
+
+✅ This version markets your EKS + Devtron migration + monitoring/logging + GitHub migration experience as a major achievement, which is exactly what hiring managers want for a Senior DevOps role.
