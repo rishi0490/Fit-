@@ -12,18 +12,18 @@ metadata:
 # Use an existing VPC and specify the subnets explicitly
 # At least two private and two public subnets in different AZs are recommended.
 vpc:
-  id: "vpc-006d86db74d33a559"     # <-- replace with your VPC ID
+  id: "vpc-006d8659"     # <-- replace with your VPC ID
   subnets:
     private:
       ap-south-1a:
-        id: "subnet-07bf6868a732626aa"     # <-- replace with private subnet ID
+        id: "subnet-072626aa"     # <-- replace with private subnet ID
       ap-south-1b:
-        id: "subnet-09defb7683d9db958"
+        id: "subnet-09dedb958"
     public:
       ap-south-1a:
-        id: "subnet-08dfc95057f1d6d2c"      # <-- replace with public subnet ID
+        id: "subnet-08dfc95d2c"      # <-- replace with public subnet ID
       ap-south-1b:
-        id: "subnet-032a514b0e06644c6"
+        id: "subnet-032a544c6"
   # Optionally make both API endpoints reachable.  You can set publicAccess:false for private‑only API access.
   clusterEndpoints:
     publicAccess:  true
