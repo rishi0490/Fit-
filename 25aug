@@ -1,0 +1,4 @@
+create sso for devtron dashboard so employee can login without password assign roles to user
+for kibana and grafana also
+c series machine used for eks dev cluster on spot instances 
+create vpc subnet private and public of existing vpc for eks cluster 
