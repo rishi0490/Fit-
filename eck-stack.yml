@@ -1,0 +1,141 @@
+---
+# Default values for eck-stack.
+# This is a YAML-formatted file.
+
+# If enabled, will use the eck-elasticsearch chart and deploy an Elasticsearch resource.
+#
+eck-elasticsearch:
+  enabled: true
+  # This is adjusting the full name of the elasticsearch resource so that both the eck-elasticsearch
+  # and the eck-kibana chart work together by default in the eck-stack chart.
+  fullnameOverride: elasticsearch
+  nodeSets:
+    - name: default
+      count: 1
+      config:
+        node.roles: ["master"]
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              env:
+                - name: ES_JAVA_OPTS
+                  value: "-Xms1g -Xmx1g"
+              resources:
+                limits:
+                  cpu: 1
+                  memory: 2Gi
+                requests:
+                  cpu: 1
+                  memory: 2Gi
+      volumeClaimTemplates:
+      - metadata:
+          name: elasticsearch-data
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: gp2
+    - name: data-nodes
+      count: 1
+      config:
+        node.roles: ["data", "ingest"]
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              env:
+                - name: ES_JAVA_OPTS
+                  value: "-Xms1g -Xmx1g"
+              resources:
+                limits:
+                  cpu: 1
+                  memory: 2Gi
+                requests:
+                  cpu: 1
+                  memory: 2Gi        
+      volumeClaimTemplates:
+      - metadata:
+          name: elasticsearch-data
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 100Gi
+          storageClassName: gp2
+# If enabled, will use the eck-kibana chart and deploy a Kibana resource.
+#
+eck-kibana:
+  enabled: true
+  ingress:
+    enabled: true  
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:548980334970:certificate/ae6fbc19-a58f-4ea9-98f0-b04c533e5c61
+      alb.ingress.kubernetes.io/group.name: fitpass-dev
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/healthcheck-path: /
+      alb.ingress.kubernetes.io/success-codes: 200,201,202,301,302
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+      alb.ingress.kubernetes.io/subnets: subnet-08dfc95057f1d6d2c,subnet-032a514b0e06644c6
+    className: alb    
+    hosts:
+    - host: dev-kibana.fitpass.dev
+      pathType: Prefix
+      paths:
+        - /
+  podTemplate:
+    spec:
+      containers:
+        - name: kibana
+          env:
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=1024"
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 0.5
+              memory: 1.5Gi   
+  # This is also adjusting the kibana reference to the elasticsearch resource named previously so that
+  # both the eck-elasticsearch and the eck-kibana chart work together by default in the eck-stack chart.
+  elasticsearchRef:
+    name: elasticsearch
+
+# If enabled, will use the eck-agent chart and deploy an Elastic Agent instance.
+#
+eck-agent:
+  enabled: false
+
+# If enabled, will use the eck-fleet-server chart and deploy a Fleet Server resource.
+#
+eck-fleet-server:
+  enabled: false
+
+# If enabled, will use the eck-beats chart and deploy a Beats resource.
+#
+eck-beats:
+  enabled: false
+
+# If enabled, will use the eck-logstash chart and deploy a Logstash resource.
+#
+eck-logstash:
+  enabled: false
+
+# If enabled, will use the eck-apm-server chart and deploy a standalone APM Server resource.
+#
+eck-apm-server:
+  enabled: false
+
+# If enabled, will use the eck-enterprise-search chart and deploy a Enterprise Search resource.
+#
+eck-enterprise-search:
+  enabled: false
