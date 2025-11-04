@@ -1,0 +1,124 @@
+controller:
+  volumes:
+    extra:
+      - name: promtail-run
+        hostPath:
+          path: /run/promtail
+
+serviceMonitor:
+  enabled: true
+
+alloy:
+  enableReporting: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 60Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  mounts:
+    varlog: true
+    dockercontainers: true
+    extra:
+      - name: promtail-run
+        mountPath: /run/promtail
+
+  configMap:
+    content: |-
+      logging {
+        level = "warn"
+        format = "logfmt"
+      }
+
+      // --- Loki writer (send logs to your Azure Loki)
+      loki.write "default" {
+        endpoint {
+          url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
+        }
+        external_labels = {
+          collector = "grafana-alloy",
+          region = "centralindia",
+          cluster = "mashreq",
+        }
+      }
+
+      // --- Kubernetes log discovery
+      discovery.kubernetes "kubernetes_pods" {
+        role = "pod"
+      }
+
+      // --- Relabel to enrich metadata
+      discovery.relabel "kubernetes_pods" {
+        targets = discovery.kubernetes.kubernetes_pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_node_name"]
+          target_label  = "node"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_name"]
+          separator     = "/"
+          target_label  = "job"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+          separator     = "/"
+          target_label  = "__path__"
+          replacement   = "/var/log/pods/*$1/*.log"
+        }
+      }
+
+      // --- File matching
+      local.file_match "kubernetes_pods" {
+        path_targets = discovery.relabel.kubernetes_pods.output
+      }
+
+      // --- Log processing pipeline
+      loki.process "kubernetes_pods" {
+        forward_to = [loki.write.default.receiver]
+        stage.cri {}
+
+        stage.match {
+          selector            = "{namespace=\"backend\"} |~ \".*\\\"kube-probe\\\\/\\\\d{1}.\\\\d{2}.*\""
+          action              = "drop"
+          drop_counter_reason = "kubeProbe"
+        }
+
+        stage.match {
+          selector = "{namespace=\"backend\"}"
+          stage.drop {
+            drop_counter_reason = "PrometheusMetrics200"
+            expression          = ".*\\\"Prometheus/\\d{1}\\.\\d{2}\\.\\d{1,2}.*(\\\"\\/metrics\\\".*)(.*\\:200.*)"
+          }
+
+          stage.drop {
+            longer_than = "2MiB"
+          }
+        }
+      }
+
+      // --- Log source (reads from host)
+      loki.source.file "kubernetes_pods" {
+        targets               = local.file_match.kubernetes_pods.targets
+        forward_to            = [loki.process.kubernetes_pods.receiver]
+        legacy_positions_file = "/run/promtail/positions.yaml"
+      }
